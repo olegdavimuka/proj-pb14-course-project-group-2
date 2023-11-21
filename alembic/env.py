@@ -1,17 +1,15 @@
-from logging.config import fileConfig
-
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
-from alembic import context
-
 import configparser
 import os
+from logging.config import fileConfig
 
+from sqlalchemy import engine_from_config, pool
+
+from alembic import context
 from models import Base
 
+
 # Read the configuration file
-config_file_path = os.path.join(os.path.dirname(__file__), '../config.ini')
+config_file_path = os.path.join(os.path.dirname(__file__), "../config.ini")
 config_ini = configparser.ConfigParser()
 config_ini.read(config_file_path)
 
@@ -26,7 +24,7 @@ if config.config_file_name is not None:
 
 # Set the SQLALCHEMY_DATABASE_URI from config.ini
 db_url = f"postgresql+psycopg2://{config_ini['postgresql']['user']}:{config_ini['postgresql']['password']}@{config_ini['postgresql']['host']}:{config_ini['postgresql']['port']}/{config_ini['postgresql']['database']}"
-config.set_main_option('sqlalchemy.url', db_url)
+config.set_main_option("sqlalchemy.url", db_url)
 
 # add your model's MetaData object here
 # for 'autogenerate' support

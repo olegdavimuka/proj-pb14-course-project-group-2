@@ -16,7 +16,7 @@ repos:
         pass_filenames: false
 
       - id: isort
-        name: isort (python)
+        name: isort 
         entry: isort --settings-file ./.isort.cfg .
         language: system
         types: [python]
