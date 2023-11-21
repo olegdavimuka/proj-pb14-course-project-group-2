@@ -1,13 +1,13 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
 import configparser
 
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read("config.ini")
 
-db_config = config['postgresql']
+db_config = config["postgresql"]
 
 DATABASE_URI = f"postgresql+psycopg2://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}"
 
