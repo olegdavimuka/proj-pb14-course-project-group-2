@@ -23,7 +23,7 @@ async def start_handler(message: types.Message):
     logging.info(f"{user_id=} {user_full_name} {time.asctime()}")
 
     await message.reply(
-        f"Hello, {user_full_name}! Welcome to our networking bot. Please follow the instructions to register.very llongggg statement"
+        f"Hello, {user_full_name}! Welcome to our networking bot. Please follow the instructions to register."
     )
 
 
