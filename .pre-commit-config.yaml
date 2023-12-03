@@ -3,28 +3,28 @@ repos:
     hooks:
       - id: black
         name: black
-        entry: black --config ./.black .
+        entry: black --config ./.black app
         language: system
         types: [python]
         pass_filenames: false
 
       - id: flake8
         name: flake8
-        entry: flake8 --config .flake8 .
+        entry: flake8 --config .flake8 app
         language: system
         types: [python]
         pass_filenames: false
 
       - id: isort
-        name: isort 
-        entry: isort --settings-file ./.isort.cfg .
+        name: isort
+        entry: isort --settings-file ./.isort.cfg app
         language: system
         types: [python]
         pass_filenames: false
 
       - id: pytest
         name: pytest
-        entry: pytest tests
+        entry: pytest app
         language: system
         types: [python]
         pass_filenames: false
