@@ -26,11 +26,3 @@ def query_gpt(prompt, max_tokens=50):
         return response.json()["choices"][0]["text"].strip()
     else:
         raise Exception(f"Error in GPT API call: {response.text}")
-
-
-prompt = "How are you?"
-try:
-    gpt_response = query_gpt(prompt)
-    print(gpt_response)
-except Exception as e:
-    print(e)
