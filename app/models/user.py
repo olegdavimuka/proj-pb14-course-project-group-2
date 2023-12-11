@@ -1,8 +1,6 @@
 from sqlalchemy import Column, DateTime, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
 
-
-Base = declarative_base()
+from app.db.database import Base
 
 
 class User(Base):

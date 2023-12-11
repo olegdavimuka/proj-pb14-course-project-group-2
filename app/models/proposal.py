@@ -1,9 +1,7 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-
-Base = declarative_base()
+from app.db.database import Base
 
 
 class Proposal(Base):
