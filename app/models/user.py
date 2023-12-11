@@ -1,6 +1,8 @@
 from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
 
-from app.db.database import Base
+
+Base = declarative_base()
 
 
 class User(Base):
@@ -8,8 +10,8 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
-    age = Column(Integer)
+    age = Column(String)
     city = Column(String)
     interests = Column(String)
     created_at = Column(DateTime)
-    avatar = Column(String)
+    occupation = Column(String)
