@@ -3,6 +3,6 @@ services:
   bot:
     build: .
     ports:
-      - "5000:80" 
+      - "8080:8080" 
     environment:
       - SOME_ENV_VAR=value 
