@@ -1,11 +1,12 @@
 import csv
+from collections import defaultdict
 from api import query_gpt
-import time
+import re
 
 
 def load_users_from_file(file_path):
     users = []
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             row['interests'] = row['interests'].split(';')
@@ -13,53 +14,63 @@ def load_users_from_file(file_path):
     return users
 
 
-def query_gpt_with_retry(prompt, retries=3, delay=30):
-    for i in range(retries):
-        try:
-            return query_gpt(prompt)
-        except Exception as e:
-            print(f"Attempt {i+1}/{retries}: {e}")
-            if i < retries - 1:
-                time.sleep(delay)
-            else:
-                raise
-
-
-def find_matches(users):
-    matches = []
+def group_users_by_city(users):
+    city_groups = defaultdict(list)
     for user in users:
-        prompt = (
-            "I am working on a networking application that connects people with similar interests. "
-            "The goal is to match users for networking events, meetups, or online discussions "
-            "based on their shared or complementary hobbies, activities, and preferences. "
-            "Given a user's interests, the application should suggest other interests "
-            "that are likely to be compatible or have a meaningful connection for networking purposes. "
-            "\n\n"
-            f"User's Interests: {', '.join(user['interests'])} from {user['city']}.\n"
-            "Suggested Similar Interests:"
-        )
+        city_groups[user['city']].append(user)
+    return city_groups
 
-        gpt_suggestion = query_gpt_with_retry(prompt)
-        suggested_interests = gpt_suggestion.split(', ')
 
-        for potential_match in users:
-            if user['city'] == potential_match['city'] and user != potential_match:
-                if any(interest in potential_match['interests'] for interest in suggested_interests):
-                    matches.append((user['name'], potential_match['name']))
+def create_gpt_prompt_for_city(city, users):
+    prompt = (
+        f"Create unique networking pairs for a meetup in {city}. "
+        "Each person should be paired with exactly one other person from the same city, based on their interests. "
+        "Provide the pairings in the format: 'Name1 - Name2'.\n\n"
+        "Participants:\n"
+    )
+    for user in users:
+        prompt += f"- {user['name']} (Interests: {', '.join(user['interests'])})\n"
+    prompt += "\nSuggested pairings:"
+    return prompt
 
-    return matches
+
+def process_gpt_response(city, gpt_response):
+    formatted_pairs = []
+    paired_users = set()
+
+    pair_pattern = re.compile(r'\b(\w+)\s*-\s*(\w+)\b')
+
+    for line in gpt_response.split('\n'):
+        match = pair_pattern.search(line)
+        if match:
+            user1, user2 = match.groups()
+            if user1 not in paired_users and user2 not in paired_users:
+                formatted_pairs.append((city, user1, user2))
+                paired_users.update([user1, user2])
+
+    return formatted_pairs
 
 
 def save_matches_to_file(matches, file_path):
-    with open(file_path, 'w') as file:
+    with open(file_path, 'w', encoding='utf-8', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(['User 1', 'User 2'])
-        for match in matches:
-            writer.writerow(match)
+        writer.writerow(['City', 'User 1', 'User 2'])
+        writer.writerows(matches)
 
 
-users = load_users_from_file('app/gpt/users.csv')
+def main():
+    users = load_users_from_file('app/gpt/users.csv')
+    city_groups = group_users_by_city(users)
+    all_matches = []
 
-matches = find_matches(users)
+    for city, users_in_city in city_groups.items():
+        prompt = create_gpt_prompt_for_city(city, users_in_city)
+        gpt_response = query_gpt(prompt)
+        city_pairs = process_gpt_response(city, gpt_response)
+        all_matches.extend(city_pairs)
 
-save_matches_to_file(matches, 'app/gpt/matches.csv')
+    save_matches_to_file(all_matches, 'app/gpt/matches.csv')
+
+
+if __name__ == "__main__":
+    main()
