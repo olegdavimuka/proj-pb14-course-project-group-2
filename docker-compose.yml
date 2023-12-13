@@ -1,0 +1,8 @@
+version: '3.11'
+services:
+  bot:
+    build: .
+    ports:
+      - "8080:8080" 
+    environment:
+      - SOME_ENV_VAR=value 
