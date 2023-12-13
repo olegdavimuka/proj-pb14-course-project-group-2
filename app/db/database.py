@@ -1,11 +1,14 @@
 import configparser
-from datetime import datetime
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from app.models.user import User
+
+# from datetime import datetime
+
+
+# from app.models.user import User
 
 
 config = configparser.ConfigParser()
@@ -23,14 +26,14 @@ session = Session()
 Base = declarative_base()
 
 
-def add_user(user_data):
-    new_user = User(
-        name=user_data["reg_name"],
-        age=user_data["reg_age"],
-        city=user_data["reg_city"],
-        interests=user_data["reg_interests"],
-        created_at=datetime.now(),
-        occupation=user_data["reg_occupation"],
-    )
-    session.add(new_user)
-    session.commit()
+# def add_user(user_data):
+#     new_user = User(
+#         name=user_data["reg_name"],
+#         age=user_data["reg_age"],
+#         city=user_data["reg_city"],
+#         interests=user_data["reg_interests"],
+#         created_at=datetime.now(),
+#         occupation=user_data["reg_occupation"],
+#     )
+#     session.add(new_user)
+#     session.commit()

@@ -5,7 +5,7 @@ from keyboards.city_register_kb import city_keyboard
 from keyboards.occupation_register_kb import occupation_keyboard
 from states.register import RegisterState
 
-from app.db.database import add_user
+from app.db.user_repository import add_user
 
 
 AGE_RANGES = ["18-24", "25-36", "37-50", "51-..."]
