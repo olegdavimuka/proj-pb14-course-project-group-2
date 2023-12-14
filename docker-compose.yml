@@ -5,4 +5,40 @@ services:
     ports:
       - "8080:8080" 
     environment:
-      - SOME_ENV_VAR=value 
+      - SOME_ENV_VAR=value
+    networks:
+      - postgres
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      PGDATA: /data/postgres
+    volumes:
+       - ./docker-data/postgress:/data/postgres
+    ports:
+      - "5433:5433"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@test.com
+      PGADMIN_DEFAULT_PASSWORD: 12345
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - ./docker-data/pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge

@@ -5,7 +5,8 @@ from keyboards.city_register_kb import city_keyboard
 from keyboards.occupation_register_kb import occupation_keyboard
 from states.register import RegisterState
 
-from app.db.user_repository import add_user
+
+# from app.db.user_repository import add_user
 
 
 AGE_RANGES = ["18-24", "25-36", "37-50", "51-..."]
@@ -86,5 +87,5 @@ async def register_interests(message: Message, state: FSMContext):
     msg = f"Ваш профіль: \nІмʼя: {register_name} \nВік: {register_age} \nМісто: {register_city} \n Сфера діяльності: {register_occupation}\nІнтереси: {register_interests}\n"
     await message.answer(msg)
 
-    add_user(reg_data)
+    # add_user(reg_data)
     await state.clear()
