@@ -11,10 +11,10 @@ user_data = [
     {"name": "George", "interests": "hiking;nature", "city": "Kyiv"},
     {"name": "Hannah", "interests": "art;reading", "city": "Lviv"},
     {"name": "Ian", "interests": "technology;reading", "city": "Kyiv"},
-    {"name": "Julia", "interests": "movies;sports", "city": "Odessa"}
+    {"name": "Julia", "interests": "movies;sports", "city": "Odessa"},
 ]
 
-with open('users.csv', 'w') as file:
+with open("users.csv", "w") as file:
     writer = csv.DictWriter(file, fieldnames=["name", "interests", "city"])
     writer.writeheader()
     writer.writerows(user_data)

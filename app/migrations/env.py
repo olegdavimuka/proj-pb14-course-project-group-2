@@ -4,12 +4,13 @@ from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
+from sqlalchemy.ext.declarative import declarative_base
 
-from app.db.database import Base
 
+Base = declarative_base()
 
 # Read the configuration file
-config_file_path = os.path.join(os.path.dirname(__file__), "../config.ini")
+config_file_path = os.path.abspath("config.ini")
 config_ini = configparser.ConfigParser()
 config_ini.read(config_file_path)
 
@@ -23,7 +24,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 # Set the SQLALCHEMY_DATABASE_URI from config.ini
-db_url = f"postgresql+psycopg2://{config_ini['postgresql']['user']}:{config_ini['postgresql']['password']}@{config_ini['postgresql']['host']}:{config_ini['postgresql']['port']}/{config_ini['postgresql']['database']}"
+db_url = f"postgresql+psycopg2://{config_ini.get('postgresql', 'user')}:{config_ini.get('postgresql', 'password')}@{config_ini.get('postgresql', 'host')}:{config_ini.get('postgresql', 'port')}/{config_ini.get('postgresql', 'database')}"
 config.set_main_option("sqlalchemy.url", db_url)
 
 # add your model's MetaData object here
