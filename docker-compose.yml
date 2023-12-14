@@ -1,44 +1,28 @@
 version: '3.11'
 services:
   bot:
+    image: app
+    container_name: alumni_networking_bot
     build: .
-    ports:
-      - "8080:8080" 
     environment:
-      - SOME_ENV_VAR=value
-    networks:
-      - postgres
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - GPT_API_KEY=${GPT_API_KEY}
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app
+    command: bash -c "python app/telegram/api.py"
 
-  postgres:
-    container_name: postgres
+  db:
     image: postgres
+    container_name: alumni_networking_bot_db
     environment:
-      POSTGRES_USER: app
-      POSTGRES_PASSWORD: app
-      PGDATA: /data/postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: alumni_networking_bot
     volumes:
-       - ./docker-data/postgress:/data/postgres
+       - $HOME/docker/volumes/postgres2:/var/lib/postgresql/data:delegated
     ports:
-      - "5433:5433"
-    networks:
-      - postgres
-    restart: unless-stopped
-
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: test@test.com
-      PGADMIN_DEFAULT_PASSWORD: 12345
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-       - ./docker-data/pgadmin:/var/lib/pgadmin
-    ports:
-      - "5050:80"
-    networks:
-      - postgres
-    restart: unless-stopped
-
-networks:
-  postgres:
-    driver: bridge
+      - 5432:5432

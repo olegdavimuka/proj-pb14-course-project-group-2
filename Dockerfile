@@ -1,8 +1,17 @@
+# For more information, please refer to https://aka.ms/vscode-docker-python
 FROM python:3.11-slim
+
+EXPOSE 80
+
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Turns off buffering for easier container logging
+ENV PYTHONUNBUFFERED=1
+
+# Install pip requirements
+COPY requirements.txt .
+RUN python -m pip install -r requirements.txt
+
 WORKDIR /app
 COPY . /app
-RUN pip install --no-cache-dir -r requirements.txt
-EXPOSE 80
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-CMD ["python", "app/telegram/api.py"]
