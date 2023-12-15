@@ -5,25 +5,27 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 
+Base = declarative_base()
+
 # from datetime import datetime
 
 
 # from app.models.user import User
 
 
-config = configparser.ConfigParser()
-config.read("config.ini")
+def connect_to_database():
+    config = configparser.ConfigParser()
+    config.read("config.ini")
 
-db_config = config["postgresql"]
+    db_config = config["postgresql"]
 
-DATABASE_URI = f"postgresql+psycopg2://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}"
+    DATABASE_URI = f"postgresql+psycopg2://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}"
 
-engine = create_engine(DATABASE_URI)
+    engine = create_engine(DATABASE_URI)
 
-Session = sessionmaker(bind=engine)
-session = Session()
-
-Base = declarative_base()
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    return session
 
 
 # def add_user(user_data):
